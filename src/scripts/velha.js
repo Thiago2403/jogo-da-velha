@@ -1,40 +1,55 @@
+// Define variables for the current player and the winner
 var jogador, vencedor = null;
+
+// Get the elements for displaying the current player and the winner
 var jogadorSelecionado = document.getElementById('jogador-selecionado');
 var vencedorSelecionado = document.getElementById('vencedor-selecionado');
 
+// Set the initial player to 'X'
 mudarJogador('X');
 
+// Function to handle when a square is chosen
 function escolherQuadrado(id) {
-   
+    // If there is already a winner, return
     if (vencedor !== null) {
         return;
     }
 
+    // Get the selected square element
     var quadrado = document.getElementById(id);
+
+    // If the square is already filled, return
     if (quadrado.innerHTML !== '-') {
         return;
     }
 
+    // Fill the square with the current player's symbol and change the color
     quadrado.innerHTML = jogador;
     quadrado.style.color = 'rgba(176, 52, 117)';
 
+    // Switch the player
     if (jogador === 'X') {
         jogador = 'O';
     } else {
         jogador = 'X';
     }
 
+    // Update the displayed current player
     mudarJogador(jogador);
+
+    // Check if there is a winner
     checaVencedor();
 }
 
+// Function to update the current player
 function mudarJogador(valor) {
     jogador = valor;
     jogadorSelecionado.innerHTML = jogador;
 }
 
-
-function checaVencedor(){
+// Function to check if there is a winner
+function checaVencedor() {
+    // Get all the square elements
     var quadrado1 = document.getElementById(1);
     var quadrado2 = document.getElementById(2);
     var quadrado3 = document.getElementById(3);
@@ -45,6 +60,7 @@ function checaVencedor(){
     var quadrado8 = document.getElementById(8);
     var quadrado9 = document.getElementById(9);
 
+    // Check all possible winning sequences
     if (checaSequencia(quadrado1, quadrado2, quadrado3)) {
         mudaCorQuadrado(quadrado1, quadrado2, quadrado3);
         mudarVencedor(quadrado1);
@@ -126,11 +142,13 @@ function checaSequencia(quadrado1, quadrado2, quadrado3) {
     return eigual;
 }
 
-function reiniciar()
-{
+// Function to restart the game
+function reiniciar() {
+    // Reset the winner and the displayed winner
     vencedor = null;
     vencedorSelecionado.innerHTML = '';
 
+    // Reset all the squares
     for (var i = 1; i <= 9; i++) {
         var quadrado = document.getElementById(i);
         quadrado.style.background = 'rgba(9, 53, 115, 0.5)';
@@ -138,9 +156,11 @@ function reiniciar()
         quadrado.innerHTML = '-';
     }
 
+    // Set the initial player to 'X'
     mudarJogador('X');
 }
 
+// Object to store player information
 var jogador1 = {
     nome: '',
     peca: ''
@@ -151,16 +171,15 @@ var jogador2 = {
     peca: ''
 };
 
-
+// Function to prompt the player for their name
 function solicitarNomeJogador(numeroJogador) {
     var nome = prompt("Por favor, insira o nome do Jogador " + numeroJogador);
     if (nome != null) {
         document.querySelector(".jogador" + numeroJogador + " p").textContent = nome;
     }
-    
-    
 }
 
+// Function to prompt the player for their chosen symbol
 function solicitarPecaJogador(numeroJogador) {
     var peca = '';
     while (peca.toUpperCase() !== 'X' && peca.toUpperCase() !== 'O') {
@@ -170,19 +189,41 @@ function solicitarPecaJogador(numeroJogador) {
     return peca.toUpperCase();
 }
 
+// Function to display the winner in an alert
 function exibirAlertaVencedor(nome) {
     alert("O vencedor é: " + nome);
 }
 
+// Function to check if there is a draw
+function checaEmpate() {
+    // Check if all squares are filled
+    for (var i = 1; i <= 9; i++) {
+        var quadrado = document.getElementById(i);
+        if (quadrado.innerHTML === '-') {
+            return false;
+        }
+    }
+    return true;
+}
 
+// Function to display a draw alert
+function exibirAlertaEmpate() {
+    alert("Empate! O jogo terminou sem vencedor.");
+}
+
+// Function to set up the game when the window loads
 window.onload = function() {
+    // Prompt the players for their names
     solicitarNomeJogador(1);
     solicitarNomeJogador(2);
 
+    // Prompt the first player for their chosen symbol
     var pecaJogador1 = solicitarPecaJogador(1);
-    var pecaJogador2 = pecaJogador1 === 'X' ? 'O' : 'X'; // O jogador 2 recebe a peça que não foi escolhida pelo jogador 1
 
-    // Definir a peça do Jogador 2
+    // Determine the symbol for the second player
+    var pecaJogador2 = pecaJogador1 === 'X' ? 'O' : 'X';
+
+    // Set the symbol for the second player
     document.querySelector(".jogador2 .peca-jogador").textContent = "Peça: " + pecaJogador2;
 
     console.log("Jogador 1 escolheu " + pecaJogador1);
